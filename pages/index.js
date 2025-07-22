@@ -1,115 +1,260 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Sparkles, Heart, Star, Moon } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import first from "@/public/1.jpeg";
+import second from "@/public/2.jpeg";
+import third from "@/public/3.jpeg";
+import fourth from "@/public/4.jpeg";
+import fifth from "@/public/5.jpeg";
+import sixth from "@/public/6.jpeg";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export default function FantasyBirthdayPage() {
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  // Configure these dates for your wife
+  const birthDate = new Date("1996-07-23"); // Change this to her actual birth date
+  const nextBirthday = new Date("2025-07-23"); // Change this to her next birthday
 
-export default function Home() {
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const calculateAge = () => {
+    const now = currentTime;
+    const birth = birthDate;
+
+    let years = now.getFullYear() - birth.getFullYear();
+    let months = now.getMonth() - birth.getMonth();
+    let days = now.getDate() - birth.getDate();
+    let hours = now.getHours() - birth.getHours();
+    let minutes = now.getMinutes() - birth.getMinutes();
+    let seconds = now.getSeconds() - birth.getSeconds();
+
+    if (seconds < 0) {
+      seconds += 60;
+      minutes--;
+    }
+    if (minutes < 0) {
+      minutes += 60;
+      hours--;
+    }
+    if (hours < 0) {
+      hours += 24;
+      days--;
+    }
+    if (days < 0) {
+      const daysInPrevMonth = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        0,
+      ).getDate();
+      days += daysInPrevMonth;
+      months--;
+    }
+    if (months < 0) {
+      months += 12;
+      years--;
+    }
+
+    return { years, months, days, hours, minutes, seconds };
+  };
+
+  const calculateCountdown = () => {
+    const now = currentTime;
+    const target = nextBirthday;
+    const diff = target.getTime() - now.getTime();
+
+    if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds };
+  };
+
+  const age = calculateAge();
+  const countdown = calculateCountdown();
+
+  const photos = [first, second, third, fourth, fifth, sixth];
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              pages/index.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 animate-pulse">
+          <Sparkles className="w-6 h-6 text-yellow-300" />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="absolute top-32 right-20 animate-bounce">
+          <Star className="w-4 h-4 text-pink-300" />
+        </div>
+        <div className="absolute bottom-20 left-32 animate-pulse">
+          <Moon className="w-8 h-8 text-blue-300" />
+        </div>
+        <div className="absolute top-1/2 right-10 animate-bounce delay-1000">
+          <Sparkles className="w-5 h-5 text-purple-300" />
+        </div>
+        <div className="absolute bottom-32 right-1/3 animate-pulse delay-500">
+          <Star className="w-6 h-6 text-yellow-400" />
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
+            ✨ My Magical Mahya ✨
+          </h1>
+          <p className="text-xl text-purple-200 font-light">
+            A celebration of Mahya’s light, love, and all the magic she brings
+          </p>
+        </div>
+
+        {/* Age Display */}
+        <Card className="mb-12 bg-gradient-to-r from-purple-800/50 to-pink-800/50 border-purple-400/30 backdrop-blur-sm">
+          <CardContent className="p-8">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold mb-6 flex items-center justify-center gap-2">
+                <Heart className="w-8 h-8 text-pink-400" />
+                Mahya’s Enchanted Age
+                <Heart className="w-8 h-8 text-pink-400" />
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-center">
+                <div className="bg-purple-700/50 rounded-lg p-4">
+                  <div className="text-3xl font-bold text-yellow-300">
+                    {age.years}
+                  </div>
+                  <div className="text-sm text-purple-200">Years</div>
+                </div>
+                <div className="bg-purple-700/50 rounded-lg p-4">
+                  <div className="text-3xl font-bold text-pink-300">
+                    {age.months}
+                  </div>
+                  <div className="text-sm text-purple-200">Months</div>
+                </div>
+                <div className="bg-purple-700/50 rounded-lg p-4">
+                  <div className="text-3xl font-bold text-blue-300">
+                    {age.days}
+                  </div>
+                  <div className="text-sm text-purple-200">Days</div>
+                </div>
+                <div className="bg-purple-700/50 rounded-lg p-4">
+                  <div className="text-3xl font-bold text-green-300">
+                    {age.hours}
+                  </div>
+                  <div className="text-sm text-purple-200">Hours</div>
+                </div>
+                <div className="bg-purple-700/50 rounded-lg p-4">
+                  <div className="text-3xl font-bold text-orange-300">
+                    {age.minutes}
+                  </div>
+                  <div className="text-sm text-purple-200">Minutes</div>
+                </div>
+                <div className="bg-purple-700/50 rounded-lg p-4">
+                  <div className="text-3xl font-bold text-red-300">
+                    {age.seconds}
+                  </div>
+                  <div className="text-sm text-purple-200">Seconds</div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Birthday Countdown */}
+        <Card className="mb-12 bg-gradient-to-r from-blue-800/50 to-purple-800/50 border-blue-400/30 backdrop-blur-sm">
+          <CardContent className="p-8">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold mb-6 flex items-center justify-center gap-2">
+                <Sparkles className="w-8 h-8 text-yellow-400" />
+                Countdown to Mahya’s Special Day
+                <Sparkles className="w-8 h-8 text-yellow-400" />
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div className="bg-blue-700/50 rounded-lg p-6">
+                  <div className="text-4xl font-bold text-yellow-300">
+                    {countdown.days}
+                  </div>
+                  <div className="text-lg text-blue-200">Days</div>
+                </div>
+                <div className="bg-blue-700/50 rounded-lg p-6">
+                  <div className="text-4xl font-bold text-pink-300">
+                    {countdown.hours}
+                  </div>
+                  <div className="text-lg text-blue-200">Hours</div>
+                </div>
+                <div className="bg-blue-700/50 rounded-lg p-6">
+                  <div className="text-4xl font-bold text-green-300">
+                    {countdown.minutes}
+                  </div>
+                  <div className="text-lg text-blue-200">Minutes</div>
+                </div>
+                <div className="bg-blue-700/50 rounded-lg p-6">
+                  <div className="text-4xl font-bold text-orange-300">
+                    {countdown.seconds}
+                  </div>
+                  <div className="text-lg text-blue-200">Seconds</div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Photo Gallery */}
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+            ✨ Moments with Mahya ✨
+          </h2>
+          <p className="text-purple-200">
+            Cherished memories from our journey together
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {photos.map((photo, index) => (
+            <Card
+              key={index}
+              className="group overflow-hidden bg-gradient-to-br from-purple-800/30 to-pink-800/30 border-purple-400/20 backdrop-blur-sm hover:scale-105 transition-all duration-300"
+            >
+              <CardContent className="p-0">
+                <div className="relative overflow-hidden">
+                  <Image
+                    src={photo || "/placeholder.svg"}
+                    alt={`Beautiful memory ${index + 1}`}
+                    width={300}
+                    height={400}
+                    className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Sparkles className="w-6 h-6 text-yellow-300 animate-pulse" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="text-center py-8">
+          <p className="text-2xl font-light text-purple-200 mb-4">
+            {"Created with infinite love for Mahya, my forever magic ✨"}
+          </p>
+          <div className="flex justify-center gap-2">
+            <Heart className="w-6 h-6 text-red-400 animate-pulse" />
+            <Heart className="w-6 h-6 text-pink-400 animate-pulse delay-200" />
+            <Heart className="w-6 h-6 text-red-400 animate-pulse delay-400" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
