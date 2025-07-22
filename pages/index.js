@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Sparkles, Heart, Star, Moon } from "lucide-react";
+import { Sparkles, Heart, Star, Moon, Music, Pause } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import first from "@/public/1.jpeg";
 import second from "@/public/2.jpeg";
@@ -10,13 +10,33 @@ import third from "@/public/3.jpeg";
 import fourth from "@/public/4.jpeg";
 import fifth from "@/public/5.jpeg";
 import sixth from "@/public/6.jpeg";
+import { useRef } from "react";
 
 export default function FantasyBirthdayPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
   // Configure these dates for your wife
   const birthDate = new Date("1996-07-23"); // Change this to her actual birth date
   const nextBirthday = new Date("2025-07-23"); // Change this to her next birthday
+
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -86,9 +106,30 @@ export default function FantasyBirthdayPage() {
 
   const photos = [first, second, third, fourth, fifth, sixth];
 
+  if (!hasMounted) return null;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden">
       {/* Animated background elements */}
+      <audio ref={audioRef} src="/birthday.mp3" loop />
+      <div className="flex justify-center my-6 z-20 relative">
+        <button
+          onClick={toggleMusic}
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-pink-600/80 hover:bg-pink-500 text-white font-semibold shadow-lg backdrop-blur-md transition-all duration-300"
+        >
+          {isPlaying ? (
+            <>
+              <Pause className="w-5 h-5" />
+              Pause Music
+            </>
+          ) : (
+            <>
+              <Music className="w-5 h-5" />
+              Play Birthday Song
+            </>
+          )}
+        </button>
+      </div>
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-10 animate-pulse">
           <Sparkles className="w-6 h-6 text-yellow-300" />
