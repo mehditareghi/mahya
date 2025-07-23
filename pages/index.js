@@ -30,7 +30,7 @@ export default function FantasyBirthdayPage() {
 
   // Configure these dates for your wife
   const birthDate = new Date("1996-07-23"); // Change this to her actual birth date
-  const nextBirthday = new Date("2025-07-23"); // Change this to her next birthday
+  const nextBirthday = new Date("2026-07-23"); // Change this to her next birthday
 
   const [hasMounted, setHasMounted] = useState(false);
 
